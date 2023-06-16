@@ -25,7 +25,7 @@ class Capistrano::SCM
         task create_release: :update_remote_cache do
           on release_roles :all do
             execute :rsync, '--archive',
-                    "#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}/#{fetch(:rsync_deploy_build_path)}", "#{release_path}/"
+                    "#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}/", "#{release_path}/"
           end
         end
 
@@ -41,7 +41,7 @@ class Capistrano::SCM
             host_spec = "#{role.user}@#{host_spec}" if role.user
             run_locally do
               execute :rsync, *fetch(:rsync_options), "#{fetch(:rsync_local_cache)}/#{fetch(:rsync_deploy_build_path)}",
-                      "#{host_spec}:#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}/#{fetch(:rsync_deploy_build_path)}"
+                      "#{host_spec}:#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}"
             end
           end
         end
