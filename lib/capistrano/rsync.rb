@@ -3,7 +3,7 @@ require 'capistrano/scm/plugin'
 class Capistrano::SCM
   class Rsync < ::Capistrano::SCM::Plugin
     def set_defaults
-       # command-line options for rsync
+      # command-line options for rsync
       set_if_empty :rsync_options, %w[--archive --delete --exclude=.git*]
 
       # Local cache (Git checkout will be happen here, resulting files then get rsynced to the remote server)
@@ -24,7 +24,8 @@ class Capistrano::SCM
         DESC
         task create_release: :update_remote_cache do
           on release_roles :all do
-            execute :rsync, '--archive', "#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}/#{fetch(:rsync_deploy_build_path)}", "#{release_path}/"
+            execute :rsync, '--archive',
+                    "#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}/#{fetch(:rsync_deploy_build_path)}", "#{release_path}/"
           end
         end
 
@@ -39,7 +40,8 @@ class Capistrano::SCM
             host_spec = role.hostname
             host_spec = "#{role.user}@#{host_spec}" if role.user
             run_locally do
-              execute :rsync, *fetch(:rsync_options), "#{fetch(:rsync_local_cache)}/", "#{host_spec}:#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}/"
+              execute :rsync, *fetch(:rsync_options), "#{fetch(:rsync_local_cache)}/#{fetch(:rsync_deploy_build_path)}",
+                      "#{host_spec}:#{fetch(:deploy_to)}/#{fetch(:rsync_remote_cache)}/#{fetch(:rsync_deploy_build_path)}"
             end
           end
         end
